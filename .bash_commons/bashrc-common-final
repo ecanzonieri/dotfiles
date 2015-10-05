@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Prompt
+sourceFrom bashrc-common-prompt
+
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# Set JAVA_HOME to 1.7 by default
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)

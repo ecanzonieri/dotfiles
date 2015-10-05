@@ -1,0 +1,5 @@
+#!/bon/sh
+
+export CLICOLOR=1
+#export LSCOLORS=gxfxhxDxCxhxhxhxhxcxcx
+export LSCOLORS=gxfxcxDxbxegedabagacad
