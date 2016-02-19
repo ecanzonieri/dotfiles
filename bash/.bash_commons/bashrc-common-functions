@@ -1,0 +1,39 @@
+#!/bin/bash
+# User custom scripts
+historyawk(){ history|awk '{a[$2]++}END{for(i in a){printf"%5d\t%s\n",a[i],i}}'|sort -nr|head; }
+
+# Docker remove all stopped containers
+docker_rm_all(){ docker rm $(docker ps -a -q); }
+
+# Docker remove all stopped images
+docker_rmi_all(){ docker rmi $(docker images | grep "^<none>" | awk '{print $3}'); }
+
+
+find_ec2_instance_ip() {
+    account=$1
+    instance_id=$2
+    regions="us-west-1 us-west-2 us-east-1 eu-central-1"
+    for region in $regions; do
+        json=$(aws --profile $account --region $region ec2 describe-instances --instance-id $instance_id 2>/dev/null)
+        if [ $? -eq 0 ]; then
+            echo $json | jq -r .Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddress
+        fi
+    done
+}
+
+find_ec2_instance_type() {
+    account=$1
+    instance_id=$2
+    regions="us-west-1 us-west-2 us-east-1 eu-central-1"
+    for region in $regions; do
+        json=$(aws --profile $account --region $region ec2 describe-instances --instance-id $instance_id 2>/dev/null)
+        if [ $? -eq 0 ]; then
+            echo $json | jq -r .Reservations[].Instances[].InstanceType
+        fi
+    done
+}
+
+ssh_to_ec2() {
+    ip=find_ec2_instance_type $1 $2
+    ssh $ip
+}

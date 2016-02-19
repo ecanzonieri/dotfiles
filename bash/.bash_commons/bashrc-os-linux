@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Add in the ~/bin in home directory to the path
+#export PATH=~/bin:$PATH
+
+#Add homedir for python packages
+#export PYTHONPATH=$PYTHONPATH:~/py-lib:~/bin
+
+#256 colors term
+export TERM=xterm-256color
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[[ -n $(command -v lesspipe) ]] && eval "$(SHELL=/bin/sh lesspipe)"
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+export CLICOLOR=1
+export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+
+# Homebrew path to PATH
+export PATH="/usr/local/sbin:$PATH"
+
+# Some ls options are different in mac os
+alias ls='ls -G'
+alias ll="ls -l"
+
+# Set JAVA_HOME to 1.7 by default
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[[ -n $(command -v lesspipe.sh) ]] && eval "$(SHELL=/bin/sh lesspipe.sh)"

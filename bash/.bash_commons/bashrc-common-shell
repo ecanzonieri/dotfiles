@@ -1,0 +1,109 @@
+#!/bin/bash
+# Enable colors for ls, etc. Prefer ~/.dir_colors #64489
+if [[ -f ~/.dir_colors ]] ; then
+eval $(dircolors -b ~/.dir_colors)
+elif [[ -f /etc/DIR_COLORS ]] ; then
+eval $(dircolors -b /etc/DIR_COLORS)
+fi
+
+# Terminal TERM var settings
+if [ "$TERM" = "xterm" ] ; then
+    if [ -z "$COLORTERM" ] ; then
+        if [ -z "$XTERM_VERSION" ] ; then
+            echo "Warning: Terminal wrongly calling itself 'xterm'."
+        else
+            case "$XTERM_VERSION" in
+            "XTerm(256)") TERM="xterm-256color" ;;
+            "XTerm(88)") TERM="xterm-88color" ;;
+            "XTerm") ;;
+            *)
+                echo "Warning: Unrecognized XTERM_VERSION: $XTERM_VERSION"
+                ;;
+            esac
+        fi
+    else
+        case "$COLORTERM" in
+            gnome-terminal)
+                # Those crafty Gnome folks require you to check COLORTERM,
+                # but don't allow you to just *favor* the setting over TERM.
+                # Instead you need to compare it and perform some guesses
+                # based upon the value. This is, perhaps, too simplistic.
+                TERM="gnome-256color"
+                ;;
+            *)
+                echo "Warning: Unrecognized COLORTERM: $COLORTERM"
+                ;;
+        esac
+   fi
+fi
+
+
+# Fallback
+SCREEN_COLORS="`tput colors`"
+if [ -z "$SCREEN_COLORS" ] ; then
+    case "$TERM" in
+        screen-*color-bce)
+            echo "Unknown terminal $TERM. Falling back to 'screen-bce'."
+            export TERM=screen-bce
+            ;;
+        *-88color)
+            echo "Unknown terminal $TERM. Falling back to 'xterm-88color'."
+            export TERM=xterm-88color
+            ;;
+        *-256color)
+            echo "Unknown terminal $TERM. Falling back to 'xterm-256color'."
+            export TERM=xterm-256color
+            ;;
+    esac
+    SCREEN_COLORS=`tput colors`
+fi
+if [ -z "$SCREEN_COLORS" ] ; then
+    case "$TERM" in
+        gnome*|xterm*|konsole*|aterm|[Ee]term)
+            echo "Unknown terminal $TERM. Falling back to 'xterm'."
+            export TERM=xterm
+            ;;
+        rxvt*)
+            echo "Unknown terminal $TERM. Falling back to 'rxvt'."
+            export TERM=rxvt
+            ;;
+        screen*)
+            echo "Unknown terminal $TERM. Falling back to 'screen'."
+            export TERM=screen
+            ;;
+    esac
+    SCREEN_COLORS=`tput colors`
+fi
+
+
+# Change the window title of X terminals
+case ${TERM} in
+xterm*|rxvt*|Eterm|aterm|kterm|gnome)
+PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
+;;
+screen)
+PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\033\\"'
+;;
+esac
+
+
+# kill the xon/off flow control
+stty -ixon
+stty -ixoff
+
+# Bash history
+# don't put duplicate lines in the history. See bash(1) for more options
+# ... or force ignoredups and ignorespace
+export HISTCONTROL=ignoredups:ignorespace
+export HISTIGNORE="&:ls:mutt:[bf]g:exit:clear:fetchmail *:fetchmail"
+export HISTFILESIZE=1000000
+export HISTSIZE=1000000
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# Disable history bang
+set +o histexpand

@@ -1,0 +1,44 @@
+#!/bin/bash
+# Alias
+alias ls='ls --color=auto'
+alias grep='grep --colour=auto'
+alias rm="rm -i"
+alias mv="mv -i"
+alias la="ls -la"
+alias p="pwd"
+
+# DUH
+alias duh="du --max-depth=1 -h --exclude=./.*"
+alias duha="du --max-depth=1 -h"
+
+
+# GIT specific settings
+alias git-diff="git-diff --color"
+alias gs='git status'
+alias gita='git add'
+alias gitc='git commit'
+alias gitcm='git commit -m'
+alias gitcam='git commit -a -m'
+alias gitco='git checkout'
+alias gitd='git diff'
+alias gitdc='git diff --cached'
+alias gits='git show'
+alias gitm='git merge --no-ff'
+alias gitpm='git pull origin master'
+alias gitap="git add -p"
+
+alias v='vim'
+
+# Image viewer alias
+alias feh="feh -g 1024x768 -Z"
+
+
+# Cd ripping/burning stuff
+alias burncd="cdrecord --dev ATAPI:/dev/sr0"
+alias ripcd="cdrdao read-cd --read-raw --device /dev/sr0 --driver generic-mmc-raw"
+alias mkiso="mkisofs -r -J -l -d -allow-multidot -allow-leading-dots -no-bak"
+
+
+# System stuff
+alias shutdown="sudo /sbin/shutdown -h now"
+alias reboot="sudo /sbin/reboot"
