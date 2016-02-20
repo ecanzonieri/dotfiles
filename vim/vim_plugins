@@ -1,0 +1,8 @@
+nerdcommented,https://github.com/scrooloose/nerdcommenter.git
+nerdtree,https://github.com/scrooloose/nerdtree.git
+vim-nerdtree-tabs,https://github.com/jistr/vim-nerdtree-tabs.git
+python-mode,https://github.com/klen/python-mode.git
+vim-airline,https://github.com/vim-airline/vim-airline
+vim-bufferline,https://github.com/bling/vim-bufferline
+vim-fugitive,git://github.com/tpope/vim-fugitive.git
+vim-sensible,git://github.com/tpope/vim-sensible.git

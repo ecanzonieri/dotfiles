@@ -40,7 +40,7 @@ let g:syntastic_python_checkers = ['pep8']
 let g:syntastic_python_pep8_args='--ignore=E501,W191'
 
 " Pylint
-let g:pymode_lint_ignore = "E501"
+let g:pymode_lint_ignore = ""
 
 " Tagbar
 let g:tagbar_width=80		" Make Tagbar window 80 chars wide.
@@ -48,6 +48,9 @@ let g:tagbar_sort=0			" Sort tags by file location.
 let g:tagbar_compact=1		" Omit help and blank lines in window.
 let g:tagbar_autofocus=1	" Move focus to Tagbar window.
 let g:tagbar_autoclose=1	" Close Tagbar window on selection.
+
+" Tab extensions
+let g:airline#extensions#tabline#enabled = 1
 
 " Ropevim
 if(filereadable(expand('~/.vim/plugin/ropevim.vim')))
@@ -289,7 +292,7 @@ function! DoWindowSwap()
 	exe 'hide buf' g:markedBufNum
 endfunction
 
-nnoremap H :call MarkWindowSwap()<CR><C-w>h :call DoWindowSwap()<CR>
+nnoremap H :call MarkWindowSwap()<CR><C-w>w :call DoWindowSwap()<CR>
 nnoremap J :call MarkWindowSwap()<CR><C-w>j :call DoWindowSwap()<CR>
 nnoremap K :call MarkWindowSwap()<CR><C-w>k :call DoWindowSwap()<CR>
 nnoremap L :call MarkWindowSwap()<CR><C-w>l :call DoWindowSwap()<CR>
@@ -376,10 +379,10 @@ nnoremap :W :w
 nnoremap :WQ :wq
 
 " Windows
-noremap <C-J> <C-W>j
-noremap <C-K> <C-W>k
-noremap <C-H> <C-W>h
-noremap <C-L> <C-W>l
+noremap <C-A> <C-W>h
+noremap <C-S> <C-W>j
+noremap <C-W> <C-W>k
+noremap <C-D> <C-W>l
 
 " Function key shortcuts
 noremap <F1> <nop>
