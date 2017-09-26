@@ -14,7 +14,9 @@ alias duha="du --max-depth=1 -h"
 
 # GIT specific settings
 alias git-diff="git-diff --color"
+#export GIT_PAGER="cat"  #default (less) is better
 alias gs='git status'
+alias gg='git grep'
 alias gita='git add'
 alias gitc='git commit'
 alias gitcm='git commit -m'
@@ -42,3 +44,9 @@ alias mkiso="mkisofs -r -J -l -d -allow-multidot -allow-leading-dots -no-bak"
 # System stuff
 alias shutdown="sudo /sbin/shutdown -h now"
 alias reboot="sudo /sbin/reboot"
+
+# Buildbot urldecode
+alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
+
+# Ipython
+alias getipdb='pip install -i https://pypi.yelpcorp.com ipython=1.2.1'

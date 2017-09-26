@@ -2,12 +2,12 @@
 # User custom scripts
 historyawk(){ history|awk '{a[$2]++}END{for(i in a){printf"%5d\t%s\n",a[i],i}}'|sort -nr|head; }
 
+# Dangerous Docker commands
 # Docker remove all stopped containers
 docker_rm_all(){ docker rm $(docker ps -a -q); }
 
 # Docker remove all stopped images
 docker_rmi_all(){ docker rmi $(docker images | grep "^<none>" | awk '{print $3}'); }
-
 
 find_ec2_instance_ip() {
     account=$1
@@ -16,9 +16,33 @@ find_ec2_instance_ip() {
     for region in $regions; do
         json=$(aws --profile $account --region $region ec2 describe-instances --instance-id $instance_id 2>/dev/null)
         if [ $? -eq 0 ]; then
-            echo $json | jq -r .Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddress
+            echo $json | jq .Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddress
         fi
     done
+}
+
+ssh_to_aws() {
+    instance_id=$1
+    accounts="dev prod"
+    regions="us-west-1 us-west-2 us-east-1"
+    ip_address=''
+    for account in $accounts; do
+        for region in $regions; do
+            json=$(aws --profile $account --region $region ec2 describe-instances --instance-id $instance_id 2>/dev/null)
+            if [ $? -eq 0 ]; then
+                ip_address=$( echo $json | jq -r .Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddress )
+                echo "Found $ip_address in $region $account"
+                break
+            fi
+        done
+        if [ -n "$ip_address" ]; then
+            break
+        fi
+    done
+    if [ -n $ip_address ]; then
+        echo "SSHing to $ip_address"
+        ssh -A $ip_address
+    fi
 }
 
 find_ec2_instance_type() {
@@ -28,12 +52,13 @@ find_ec2_instance_type() {
     for region in $regions; do
         json=$(aws --profile $account --region $region ec2 describe-instances --instance-id $instance_id 2>/dev/null)
         if [ $? -eq 0 ]; then
-            echo $json | jq -r .Reservations[].Instances[].InstanceType
+            echo $json | jq .Reservations[].Instances[].InstanceType
         fi
     done
 }
 
-ssh_to_ec2() {
-    ip=find_ec2_instance_type $1 $2
-    ssh $ip
+clear_aws_creds() {
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_DEFAULT_REGION
+    unset AWS_SECRET_ACCESS_KEY
 }
